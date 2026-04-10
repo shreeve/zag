@@ -1,6 +1,6 @@
 # Zag
 
-A fast, modern systems language with elegant syntax.
+A fast, modern systems language with elegant syntax that compiles to Zig.
 
 `Zag` is a systems language project focused on clean, expressive syntax without giving up explicit control, predictable performance, or native compilation. The initial strategy is straightforward: compile `Zag` to `Zig`, and let the Zig toolchain own the lower half of the stack.
 
