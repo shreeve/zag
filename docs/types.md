@@ -103,13 +103,11 @@ That means the compiler cannot casually guess a "smallest" or "most efficient" t
 
 Because `Zag` targets `Zig`, some places need stronger discipline early:
 
-- public definitions
-- routine parameters in v0
-- extern or FFI boundaries
+- `pub` / `export` / `extern` routine signatures (parameters and returns)
 - struct fields
 - layout-sensitive declarations
 
-At these boundaries, type inference should be constrained or explicit annotation should be required.
+At these boundaries, type inference should be constrained or explicit annotation should be required. The bootstrap compiler warns when public/extern signatures lack types; internal `fun` / `sub` may still omit parameter types where defaults apply (see Recommended V0 Policy below).
 
 ### 4. Numeric inference must be conservative
 
@@ -156,17 +154,18 @@ This gives `Zag`:
 
 ## Recommended V0 Policy
 
+This matches the current bootstrap: types may be omitted in many places; the emitter still produces concrete Zig types (often via defaults such as `i64` for untyped parameters). Warnings call out untyped `pub` / `extern` signatures.
+
 ### Allow omission here
 
 - local bindings when the initializer is clear
+- `fun` / `sub` parameters and return types in non-exported code (defaults apply; see `docs/syntax.md`)
 - simple `fun` return types when the body is obvious
 - internal helper values with unambiguous use sites
 
 ### Require explicit types here
 
-- `fun` parameters
-- public definitions
-- extern or FFI interfaces
+- `pub` / `extern` / `export` routines: parameters and return types at public and FFI boundaries (the compiler warns when these are missing)
 - struct fields
 - anything layout-sensitive
 

@@ -80,8 +80,8 @@ program  body  stmt  decl  defn  block
 fun  sub  use  typedef  test  enum  errors  struct
 members  member  field  params  returns  type
 expr  cond  if  while  for  match  arms
-pattern_atom  pattern  arm
-suffix_if  coalesce  catch
+patatom  pattern  arm
+postif  coalesce  catch
 return  break  continue
 defer  errdefer  comptime  inline
 assign  const
@@ -171,10 +171,10 @@ The main policy should be:
 
 Likely boundaries that should require explicit types early:
 
-- public definitions
-- function parameters in v0
-- extern or FFI boundaries
+- `pub` / `export` / `extern` routine signatures
 - struct fields and layout-sensitive declarations
+
+Internal routines may omit parameter types while the bootstrap relies on defaults; see `docs/types.md`.
 
 ### 5. Generated Zig Source
 

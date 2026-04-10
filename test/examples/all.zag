@@ -186,8 +186,8 @@ fun main -> !void                          # fun (main can return errors for try
   # Zig: if (true) { ... }
   #      const x = if (true) 42 else 0;
 
-  print "yes" if true                      # suffix_if
-  x = 42 if true else 0                   # suffix_if (value)
+  print "yes" if true                      # postif
+  x = 42 if true else 0                   # postif (value)
   print x
 
   # --- While ---

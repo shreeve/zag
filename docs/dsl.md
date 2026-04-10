@@ -19,7 +19,7 @@ tokens                 # token type declarations
 
 @parser                # parser section
 
-@conflicts = 0         # expected conflict count
+@conflicts = N         # expected SLR conflict count (must match table build; Zag uses 18)
 @as = [ident, keyword] # context-sensitive keyword promotion
 
 <rule> = <elements> → <action>   # parser rules
@@ -204,7 +204,7 @@ Trailing nils are automatically stripped.
 | Directive | Purpose |
 |-----------|---------|
 | `@lang = "zag"` | Import language module (`zag.zig`) |
-| `@conflicts = 0` | Expected parser conflict count |
+| `@conflicts = N` | Expected SLR conflict count (Zag: 18 in `zag.grammar`) |
 | `@as = [ident, keyword]` | Promote identifiers to keywords when parser state expects them |
 | `@code location { ... }` | Inject raw Zig at `imports`, `sexp`, `parser`, or `bottom` |
 

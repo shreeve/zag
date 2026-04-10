@@ -282,7 +282,7 @@ workarounds and none block real programs.
 - **`noalias`** — a performance hint, not a semantic requirement. Adding it as a
   param modifier (like `comptime`) would be straightforward if demand arises.
 - **Inline assembly** — highly specialized and inherently Zig-syntax-heavy. The
-  `zig "..."` passthrough handles it naturally.
+  `zig '...'` string passthrough handles it naturally (double-quoted `zig "..."` works too).
 - **`@cImport`** — already works via `@builtin` passthrough for simple cases;
   the block form (`@cImport({ @cInclude("..."); })`) needs the `zig` passthrough.
 - **Multiline strings** — Zig uses `\\\\` line prefixes which conflict with

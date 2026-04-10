@@ -129,12 +129,10 @@ Goal: expand the language carefully after the bootstrap path works.
 
 Likely topics:
 
-- structs and enums
-- pointers and mutability
-- error handling
-- foreign function boundaries
-- layout-sensitive declarations
-- a growing set of opt-in capability packs
+- richer pointer, mutability, and aliasing rules than the bootstrap subset
+- stricter layout, alignment, and ABI story at FFI boundaries
+- deeper error-union and optional semantics where the emitter can prove more
+- cross-module symbol resolution and capability packs beyond single-file compilation
 
 Deferred topics:
 
