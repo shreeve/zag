@@ -22,7 +22,7 @@ The goal is not to hide low-level reality. The goal is to make systems programmi
 
 ## Language Ethos
 
-`Zag` should feel like `Zag`, even in a different runtime and compilation world.
+`Zag` should feel like [`Rip`](https://github.com/shreeve/rip-lang.com), even in a different runtime and compilation world.
 
 - whitespace-sensitive and structurally clean
 - concise by default
