@@ -123,15 +123,25 @@
     .bi { color: #67e8f9; }
 
     .code-panels {
-      position: relative;
+      display: grid;
+      grid-template: 1fr / 1fr;
+    }
+
+    .code-panels-wrap {
+      overflow: hidden;
+      transition: height 0.3s ease;
     }
 
     .code-panel {
-      display: none;
+      grid-area: 1 / 1;
+      visibility: hidden;
+      height: 0;
+      overflow: hidden;
     }
 
     .code-panel.active {
-      display: block;
+      visibility: visible;
+      height: auto;
     }
 
     ul {
@@ -214,6 +224,7 @@
         <button class="code-tab active" onclick="showTab('hello-toggle', 0)">Zag</button>
         <button class="code-tab" onclick="showTab('hello-toggle', 1)">Zig</button>
       </div>
+      <div class="code-panels-wrap">
       <div class="code-panels">
         <div class="code-panel active">
 <pre><span class="kw">fun</span> <span class="fn">add</span> a: <span class="ty">i32</span>, b: <span class="ty">i32</span> <span class="op">-></span> <span class="ty">i32</span>
@@ -242,6 +253,7 @@
     }
 }</pre>
         </div>
+      </div>
       </div>
     </div>
 
@@ -279,8 +291,28 @@
       const toggle = document.getElementById(toggleId);
       const tabs = toggle.querySelectorAll('.code-tab');
       const panels = toggle.querySelectorAll('.code-panel');
+      const wrap = toggle.querySelector('.code-panels-wrap');
+
+      // Step 1: Lock wrapper at current height, disable transition
+      wrap.style.transition = 'none';
+      wrap.style.height = wrap.offsetHeight + 'px';
+
+      // Step 2: Swap panels — grid keeps both in layout, only visibility changes
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       panels.forEach((p, i) => p.classList.toggle('active', i === index));
+
+      // Step 3: Read the new natural height from the grid
+      const grid = toggle.querySelector('.code-panels');
+      const toHeight = grid.offsetHeight;
+
+      // Step 4: Re-enable transition and animate (double-rAF ensures paint)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          wrap.style.transition = '';
+          wrap.style.height = toHeight + 'px';
+        });
+      });
+      wrap.addEventListener('transitionend', () => { wrap.style.height = ''; }, { once: true });
     }
   </script>
 
