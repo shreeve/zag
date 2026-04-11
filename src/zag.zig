@@ -44,6 +44,7 @@ pub const Tag = enum(u8) {
     @"as",
     @"??",
     @"catch",
+    @"ternary",
     @"builtin",
     @"error_union",
 

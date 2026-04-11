@@ -1163,6 +1163,15 @@ pub const Compiler = struct {
                         try self.emitExpr(children[2], w);
                     },
 
+                    .@"ternary" => if (children.len >= 3) {
+                        try w.writeAll("if (");
+                        try self.emitExpr(children[0], w);
+                        try w.writeAll(") ");
+                        try self.emitExpr(children[1], w);
+                        try w.writeAll(" else ");
+                        try self.emitExpr(children[2], w);
+                    },
+
                     .@"neg" => {
                         try w.writeAll("-");
                         if (children.len > 0) try self.emitExpr(children[0], w);
