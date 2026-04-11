@@ -122,19 +122,8 @@
     .op { color: #f87171; }
     .bi { color: #67e8f9; }
 
-    .code-panels {
-      interpolate-size: allow-keywords;
-    }
-
-    .code-panel {
-      height: 0;
-      overflow: hidden;
-      transition: height 0.3s ease;
-    }
-
-    .code-panel.active {
-      height: auto;
-    }
+    .code-panel { display: none; }
+    .code-panel.active { display: block; }
 
     ul {
       margin: 0.5rem 0 1.5rem 1.5rem;
@@ -281,8 +270,19 @@
       const toggle = document.getElementById(toggleId);
       const tabs = toggle.querySelectorAll('.code-tab');
       const panels = toggle.querySelectorAll('.code-panel');
+      const container = toggle.querySelector('.code-panels');
+      const fromHeight = container.offsetHeight;
+
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       panels.forEach((p, i) => p.classList.toggle('active', i === index));
+
+      const toHeight = container.offsetHeight;
+      if (fromHeight !== toHeight) {
+        container.animate(
+          [{ height: fromHeight + 'px' }, { height: toHeight + 'px' }],
+          { duration: 250, easing: 'ease' }
+        );
+      }
     }
   </script>
 
