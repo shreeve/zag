@@ -63,10 +63,58 @@
       padding: 1.25rem 1.5rem;
       border-radius: 8px;
       overflow-x: auto;
-      margin: 1rem 0 1.5rem;
+      margin: 0;
       font-size: 0.88rem;
       line-height: 1.5;
     }
+
+    .code-toggle {
+      margin: 1rem 0 1.5rem;
+    }
+
+    .code-tabs {
+      display: flex;
+      gap: 0;
+    }
+
+    .code-tab {
+      padding: 0.45rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .code-tab:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    .code-tab:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    .code-tab.active {
+      background: #1a1a2e;
+      color: #7ec8e3;
+    }
+
+    .code-tab:not(.active) {
+      background: #2d2d44;
+      color: #777;
+    }
+
+    .code-tab:not(.active):hover {
+      color: #aaa;
+    }
+
+    .code-toggle pre {
+      border-radius: 0 8px 8px 8px;
+    }
+
+    .code-panel { display: none; }
+    .code-panel.active { display: block; }
 
     ul {
       margin: 0.5rem 0 1.5rem 1.5rem;
@@ -143,6 +191,12 @@
 
     <h2>Hello, Zag</h2>
 
+    <div class="code-toggle" id="hello-toggle">
+      <div class="code-tabs">
+        <button class="code-tab active" onclick="showTab('hello-toggle', 0)">Zag</button>
+        <button class="code-tab" onclick="showTab('hello-toggle', 1)">Zig</button>
+      </div>
+      <div class="code-panel active">
 <pre>fun add a: i32, b: i32 -> i32
   a + b
 
@@ -152,6 +206,24 @@ sub main
     print total
   else
     print 0</pre>
+      </div>
+      <div class="code-panel">
+<pre>const std = @import("std");
+
+fn add(a: i32, b: i32) i32 {
+    return a + b;
+}
+
+pub fn main() void {
+    const total = add(1, 2);
+    if (total &gt; 0) {
+        std.debug.print("{any}\n", .{total});
+    } else {
+        std.debug.print("{any}\n", .{0});
+    }
+}</pre>
+      </div>
+    </div>
 
     <h2>Features</h2>
     <ul>
@@ -168,7 +240,7 @@ sub main
 
     <h2>Quick Start</h2>
 
-<pre>zig build                                    # build the compiler
+<pre style="margin: 1rem 0 1.5rem; border-radius: 8px">zig build                                    # build the compiler
 ./bin/zag --run test/examples/hello.zag      # compile and run
 ./bin/zag --compile test/examples/hello.zag  # emit Zig source
 ./bin/zag test/examples/hello.zag            # print S-expressions</pre>
@@ -181,6 +253,16 @@ sub main
   </div>
 
   <footer>Zag &mdash; blazing fast. super clean.</footer>
+
+  <script>
+    function showTab(toggleId, index) {
+      const toggle = document.getElementById(toggleId);
+      const tabs = toggle.querySelectorAll('.code-tab');
+      const panels = toggle.querySelectorAll('.code-panel');
+      tabs.forEach((t, i) => t.classList.toggle('active', i === index));
+      panels.forEach((p, i) => p.classList.toggle('active', i === index));
+    }
+  </script>
 
 </body>
 </html>
