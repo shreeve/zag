@@ -278,9 +278,27 @@
 
   <script>
     function hi(s, rules) {
-      let h = s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-      for (const [cls, re] of rules)
-        h = h.replace(re, m => `<span class="${cls}">${m}</span>`);
+      const tokens = [];
+      let used = new Uint8Array(s.length);
+      for (const [cls, re] of rules) {
+        for (const m of s.matchAll(re)) {
+          let overlap = false;
+          for (let i = m.index; i < m.index + m[0].length; i++)
+            if (used[i]) { overlap = true; break; }
+          if (overlap) continue;
+          for (let i = m.index; i < m.index + m[0].length; i++) used[i] = 1;
+          tokens.push({ start: m.index, end: m.index + m[0].length, cls, text: m[0] });
+        }
+      }
+      tokens.sort((a, b) => a.start - b.start);
+      let h = '', pos = 0;
+      const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      for (const t of tokens) {
+        if (t.start > pos) h += esc(s.slice(pos, t.start));
+        h += `<span class="${t.cls}">${esc(t.text)}</span>`;
+        pos = t.end;
+      }
+      if (pos < s.length) h += esc(s.slice(pos));
       return h;
     }
 
