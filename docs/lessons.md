@@ -6,7 +6,7 @@ This document captures the most important lessons for `Zag` from studying three 
 
 - `rip-lang` — especially `src/grammar/grammar.rip` and `src/lexer.js`
 - `slash` — especially `slash.grammar` and `src/grammar.zig`
-- `em` / MUMPS — especially `mumps.grammar`, `docs/language/GRAMMAR.md`, and `docs/language/LEXER.md`
+- `em` / MUMPS — especially `mumps.grammar` and `src/mumps.zig`
 
 The goal is not to document those projects for their own sake. The goal is to identify what `Zag` should borrow, what it should avoid, and what architectural patterns are now proven enough to trust.
 

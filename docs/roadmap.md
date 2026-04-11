@@ -25,7 +25,7 @@ Deliverables (all complete):
 - initial language sketch (`docs/syntax.md`)
 - compact v0 syntax/type spec (`docs/types.md`)
 - grammar-system lessons from `rip-lang`, `slash`, and `mumps` (`docs/lessons.md`)
-- grammar DSL reference (`docs/dsl.md`)
+- grammar DSL reference ([Nexus](https://github.com/shreeve/nexus))
 
 ## Phase 1: Bootstrap Compiler ✓
 
