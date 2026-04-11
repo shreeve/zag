@@ -93,7 +93,7 @@ Key grammar features: `body` uses NEWLINE as separator (not terminator); `block`
 ### Build Commands
 
 ```bash
-zig build grammar                            # build the grammar tool
+# nexus is built separately: (cd ../nexus && zig build)
 zig build parser                              # generate parser from grammar (uses nexus)
 zig build                                    # build the zag compiler
 ./bin/zag test/examples/hello.zag             # parse and print S-expressions

@@ -5,7 +5,7 @@
 This document captures the most important lessons for `Zag` from studying three existing systems:
 
 - `rip-lang` — especially `src/grammar/grammar.rip` and `src/lexer.js`
-- `slash` — especially `slash.grammar` and `src/grammar.zig`
+- `slash` — especially `slash.grammar` and `src/slash.zig`
 - `em` / MUMPS — especially `mumps.grammar` and `src/mumps.zig`
 
 The goal is not to document those projects for their own sake. The goal is to identify what `Zag` should borrow, what it should avoid, and what architectural patterns are now proven enough to trust.
@@ -123,7 +123,7 @@ This is important for `Zag`.
 
 It means the grammar system is not merely matching regex-like patterns at runtime. It can generate the same kind of fast character dispatch a human would hand-write.
 
-This should definitely be preserved in `Zag`'s local `src/grammar.zig`.
+This is now handled by [Nexus](https://github.com/shreeve/nexus), the shared grammar engine.
 
 ## Lesson 6: `pre` Is A Foundational Abstraction
 

@@ -39,7 +39,7 @@ Zag source → Rewriter (indent/outdent, minus classification)
 ## Build Commands
 
 ```bash
-zig build grammar                            # build the grammar tool
+# nexus is built separately: (cd ../nexus && zig build)
 zig build parser                             # generate parser from grammar (uses nexus)
 zig build                                    # build the zag compiler
 ./bin/zag test/examples/hello.zag            # parse → print S-expressions
