@@ -290,13 +290,20 @@
       const panels = toggle.querySelectorAll('.code-panel');
       const container = toggle.querySelector('.code-panels');
 
+      // Measure the target panel height before swapping
       const fromHeight = container.offsetHeight;
-      container.style.height = fromHeight + 'px';
+      panels[index].style.position = 'relative';
+      panels[index].style.opacity = '1';
+      const toHeight = panels[index].offsetHeight;
+      panels[index].style.position = '';
+      panels[index].style.opacity = '';
 
+      // Lock current height, then swap
+      container.style.height = fromHeight + 'px';
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       panels.forEach((p, i) => p.classList.toggle('active', i === index));
 
-      const toHeight = toggle.querySelector('.code-panel.active').offsetHeight;
+      // Animate to new height
       requestAnimationFrame(() => { container.style.height = toHeight + 'px'; });
       container.addEventListener('transitionend', () => { container.style.height = ''; }, { once: true });
     }
