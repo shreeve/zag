@@ -123,24 +123,19 @@
     .bi { color: #67e8f9; }
 
     .code-panels {
-      position: relative;
+      display: grid;
+      grid-template: 1fr / 1fr;
       overflow: hidden;
       transition: height 0.3s ease;
     }
 
     .code-panel {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      opacity: 0;
-      pointer-events: none;
+      grid-area: 1 / 1;
+      visibility: hidden;
     }
 
     .code-panel.active {
-      position: relative;
-      opacity: 1;
-      pointer-events: auto;
+      visibility: visible;
     }
 
     ul {
@@ -290,24 +285,24 @@
       const panels = toggle.querySelectorAll('.code-panel');
       const container = toggle.querySelector('.code-panels');
 
-      // Measure target height before swapping
-      panels[index].style.cssText = 'position:relative;opacity:1';
-      const toHeight = panels[index].offsetHeight;
-      panels[index].style.cssText = '';
-
-      // Lock at current height and force layout
+      // Lock current height, no transition
       container.style.transition = 'none';
       container.style.height = container.offsetHeight + 'px';
-      container.offsetHeight; // force reflow
+      container.offsetHeight;
 
-      // Swap panels
+      // Swap
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       panels.forEach((p, i) => p.classList.toggle('active', i === index));
 
-      // Animate to new height
+      // Measure new active panel
+      const toHeight = panels[index].scrollHeight;
+
+      // Animate
       requestAnimationFrame(() => {
-        container.style.transition = '';
-        container.style.height = toHeight + 'px';
+        requestAnimationFrame(() => {
+          container.style.transition = '';
+          container.style.height = toHeight + 'px';
+        });
       });
       container.addEventListener('transitionend', () => { container.style.height = ''; }, { once: true });
     }
