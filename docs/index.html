@@ -122,8 +122,19 @@
     .op { color: #f87171; }
     .bi { color: #67e8f9; }
 
-    .code-panel { display: none; }
-    .code-panel.active { display: block; }
+    .code-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.3s ease;
+    }
+
+    .code-panel.active {
+      grid-template-rows: 1fr;
+    }
+
+    .code-panel > pre {
+      overflow: hidden;
+    }
 
     ul {
       margin: 0.5rem 0 1.5rem 1.5rem;
