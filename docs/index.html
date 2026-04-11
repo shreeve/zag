@@ -123,17 +123,13 @@
     .bi { color: #67e8f9; }
 
     .code-panel {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.3s ease;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
     }
 
     .code-panel.active {
-      grid-template-rows: 1fr;
-    }
-
-    .code-panel > pre {
-      overflow: hidden;
+      max-height: 500px;
     }
 
     ul {
