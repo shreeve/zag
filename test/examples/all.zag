@@ -109,7 +109,7 @@ struct Point                               # struct with methods
 #          return a + b;
 #      }
 
-fun add a: i32, b: i32 -> i32             # fun (params + returns)
+fun add a: i32, b: i32 -> i32              # fun (params + returns)
   a + b
 
 # Zig: fn square(x: i64) i64 {
@@ -187,9 +187,9 @@ fun main -> !void                          # fun (main can return errors for try
   #      const x = if (true) 42 else 0;
 
   print "yes" if true                      # postif (guard)
-  x = 42 if true else 0                   # ternary (value in assignment)
+  x = 42 if true else 0                    # ternary (value in assignment)
   print x
-  print (x if x > 0 else 99)              # ternary (value as argument)
+  print (x if x > 0 else 99)               # ternary (value as argument)
 
   # --- While ---
   #
@@ -197,7 +197,7 @@ fun main -> !void                          # fun (main can return errors for try
   #      while (n < 5) { n += 1; }
 
   n = 0
-  while n < 5                             # while, cond
+  while n < 5                              # while, cond
     n += 1                                 # assign (+=)
   print n
 
