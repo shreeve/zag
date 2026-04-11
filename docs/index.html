@@ -301,8 +301,8 @@ pub fn main() void {
 
       // Swap content and measure target
       area.value = codeSamples[id][index];
-      area.style.height = 'auto';
-      const toHeight = area.offsetHeight;
+      area.style.height = '0';
+      const toHeight = area.scrollHeight;
 
       // Reset to locked height
       area.style.height = fromHeight + 'px';
