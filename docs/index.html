@@ -113,6 +113,15 @@
       border-radius: 0 8px 8px 8px;
     }
 
+    .kw { color: #7ec8e3; }
+    .ty { color: #a78bfa; }
+    .fn { color: #86efac; }
+    .st { color: #fbbf24; }
+    .nu { color: #f9a8d4; }
+    .cm { color: #666; font-style: italic; }
+    .op { color: #f87171; }
+    .bi { color: #67e8f9; }
+
     .code-panels {
       position: relative;
       overflow: hidden;
@@ -217,29 +226,29 @@
       </div>
       <div class="code-panels">
         <div class="code-panel active">
-<pre>fun add a: i32, b: i32 -> i32
-  a + b
+<pre><span class="kw">fun</span> <span class="fn">add</span> a: <span class="ty">i32</span>, b: <span class="ty">i32</span> <span class="op">-></span> <span class="ty">i32</span>
+  a <span class="op">+</span> b
 
-sub main
-  total = add 1, 2
-  if total > 0
-    print total
-  else
-    print 0</pre>
+<span class="kw">sub</span> <span class="fn">main</span>
+  total <span class="op">=</span> <span class="fn">add</span> <span class="nu">1</span>, <span class="nu">2</span>
+  <span class="kw">if</span> total <span class="op">></span> <span class="nu">0</span>
+    <span class="fn">print</span> total
+  <span class="kw">else</span>
+    <span class="fn">print</span> <span class="nu">0</span></pre>
         </div>
         <div class="code-panel">
-<pre>const std = @import("std");
+<pre><span class="kw">const</span> std = <span class="bi">@import</span>(<span class="st">"std"</span>);
 
-fn add(a: i32, b: i32) i32 {
-    return a + b;
+<span class="kw">fn</span> <span class="fn">add</span>(a: <span class="ty">i32</span>, b: <span class="ty">i32</span>) <span class="ty">i32</span> {
+    <span class="kw">return</span> a <span class="op">+</span> b;
 }
 
-pub fn main() void {
-    const total = add(1, 2);
-    if (total &gt; 0) {
-        std.debug.print("{any}\n", .{total});
-    } else {
-        std.debug.print("{any}\n", .{0});
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="fn">main</span>() <span class="ty">void</span> {
+    <span class="kw">const</span> total = <span class="fn">add</span>(<span class="nu">1</span>, <span class="nu">2</span>);
+    <span class="kw">if</span> (total <span class="op">&gt;</span> <span class="nu">0</span>) {
+        std.debug.<span class="fn">print</span>(<span class="st">"{any}\n"</span>, .{total});
+    } <span class="kw">else</span> {
+        std.debug.<span class="fn">print</span>(<span class="st">"{any}\n"</span>, .{<span class="nu">0</span>});
     }
 }</pre>
         </div>
