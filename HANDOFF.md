@@ -42,10 +42,10 @@ Zag source → Rewriter (indent/outdent, minus classification)
 # nexus is built separately: (cd ../nexus && zig build)
 zig build parser                             # generate parser from grammar (uses nexus)
 zig build                                    # build the zag compiler
-./bin/zag test/examples/hello.zag            # parse → print S-expressions
-./bin/zag --compile test/examples/all.zag    # emit Zig source
-./bin/zag --run test/examples/all.zag        # compile and run end-to-end
-./bin/zag --tokens test/examples/hello.zag   # dump token stream
+./bin/zag test/examples/hello.zag             # emit Zig source (default)
+./bin/zag -r test/examples/all.zag           # compile and run
+./bin/zag -s test/examples/hello.zag         # print S-expressions
+./bin/zag -t test/examples/hello.zag         # dump token stream
 ```
 
 ## What's Done

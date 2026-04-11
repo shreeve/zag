@@ -44,7 +44,7 @@ Primary spec reference:
 - parser produces raw S-expressions directly
 - type resolution pre-pass: symbol table, void detection, `typeOf()`, declaration warnings
 - `src/compiler.zig` walks sexps and emits readable Zig source
-- `./bin/zag --run test/examples/hello.zag` compiles and runs end-to-end
+- `./bin/zag -r test/examples/hello.zag` compiles and runs end-to-end
 - all high-priority and medium-priority Zig target features implemented
 - real embedded protocol handler converted to Zag (test/examples/protocol.zag)
 

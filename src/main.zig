@@ -1,20 +1,19 @@
 //! Zag Compiler — Bootstrap Driver
 //!
-//! Reads a .zag source file and parses it into S-expressions,
-//! compiles to Zig source, or runs the result end-to-end.
+//! Reads a .zag source file, parses it, and compiles to Zig source.
 //!
 //! Usage:
-//!   zag <file.zag>                 — parse and print S-expressions
-//!   zag -c, --compile <file.zag>   — compile to Zig source
-//!   zag -r, --run <file.zag>       — compile and run via zig
-//!   zag -t, --tokens <file.zag>    — dump token stream
+//!   zag <file.zag>              — compile to Zig source (default)
+//!   zag -r, --run <file.zag>   — compile and run via zig
+//!   zag -s, --sexps <file.zag> — print S-expressions
+//!   zag -t, --tokens <file.zag> — dump token stream
 
 const std = @import("std");
 const parser = @import("parser.zig");
 const zag = @import("zag.zig");
 const Compiler = @import("compiler.zig").Compiler;
 
-const Mode = enum { parse, compile, run, tokens };
+const Mode = enum { compile, run, sexps, tokens };
 
 pub fn main() !void {
     const allocator = std.heap.page_allocator;
@@ -22,7 +21,7 @@ pub fn main() !void {
     const args = try std.process.argsAlloc(allocator);
     defer std.process.argsFree(allocator, args);
 
-    var mode: Mode = .parse;
+    var mode: Mode = .compile;
     var file_path: ?[]const u8 = null;
 
     for (args[1..]) |arg| {
@@ -30,6 +29,8 @@ pub fn main() !void {
             mode = .compile;
         } else if (std.mem.eql(u8, arg, "-r") or std.mem.eql(u8, arg, "--run")) {
             mode = .run;
+        } else if (std.mem.eql(u8, arg, "-s") or std.mem.eql(u8, arg, "--sexps")) {
+            mode = .sexps;
         } else if (std.mem.eql(u8, arg, "-t") or std.mem.eql(u8, arg, "--tokens")) {
             mode = .tokens;
         } else if (arg.len > 0 and arg[0] == '-') {
@@ -42,12 +43,14 @@ pub fn main() !void {
 
     if (file_path == null) {
         std.debug.print(
-            "Usage: zag [options] <file.zag>\n" ++
-                "  -c, --compile  Compile to Zig source\n" ++
-                "  -r, --run      Compile and run via zig\n" ++
-                "  -t, --tokens   Dump token stream\n",
-            .{},
-        );
+            \\Usage: zag [options] <file.zag>
+            \\
+            \\  -c, --compile  Compile to Zig source (default)
+            \\  -r, --run      Compile and run via zig
+            \\  -s, --sexps    Print S-expressions
+            \\  -t, --tokens   Dump token stream
+            \\
+        , .{});
         std.process.exit(1);
     }
 
@@ -58,9 +61,9 @@ pub fn main() !void {
     defer allocator.free(source);
 
     switch (mode) {
-        .parse => try parseAndPrint(allocator, source),
         .compile => try compileToStdout(allocator, source),
         .run => try compileAndRun(allocator, source, file_path.?),
+        .sexps => try parseAndPrint(allocator, source),
         .tokens => dumpTokens(source),
     }
 }

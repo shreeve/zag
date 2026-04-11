@@ -263,9 +263,10 @@
     <h2>Quick Start</h2>
 
 <pre style="margin: 1rem 0 1.5rem; border-radius: 8px">zig build                                    # build the compiler
-./bin/zag --run test/examples/hello.zag      # compile and run
-./bin/zag --compile test/examples/hello.zag  # emit Zig source
-./bin/zag test/examples/hello.zag            # print S-expressions</pre>
+./bin/zag test/examples/hello.zag            # emit Zig source (default)
+./bin/zag -r test/examples/hello.zag         # compile and run
+./bin/zag -s test/examples/hello.zag         # print S-expressions
+./bin/zag -t test/examples/hello.zag         # dump token stream</pre>
 
     <h2>Pipeline</h2>
     <p>Zag source &rarr; S-expressions &rarr; type resolution &rarr; Zig source &rarr; native binary.</p>

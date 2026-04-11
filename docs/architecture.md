@@ -96,10 +96,10 @@ Key grammar features: `body` uses NEWLINE as separator (not terminator); `block`
 # nexus is built separately: (cd ../nexus && zig build)
 zig build parser                              # generate parser from grammar (uses nexus)
 zig build                                    # build the zag compiler
-./bin/zag test/examples/hello.zag             # parse and print S-expressions
-./bin/zag --compile test/examples/hello.zag   # emit Zig source
-./bin/zag --run test/examples/hello.zag       # compile and run end-to-end
-./bin/zag --tokens test/examples/hello.zag    # dump token stream
+./bin/zag test/examples/hello.zag              # emit Zig source (default)
+./bin/zag -r test/examples/hello.zag          # compile and run
+./bin/zag -s test/examples/hello.zag          # print S-expressions
+./bin/zag -t test/examples/hello.zag          # dump token stream
 ```
 
 ## Stage Boundaries
