@@ -307,8 +307,9 @@
       ['st', /"[^"]*"|'[^']*'/g],
       ['kw', /\b(fun|sub|if|else|while|for|match|return|break|continue|defer|errdefer|try|catch|comptime|inline|pub|extern|export|use|test|enum|struct|error|type)\b/g],
       ['ty', /\b(i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|bool|void|noreturn|usize)\b/g],
+      ['fn', /\b(add|print|main)\b/g],
       ['nu', /\b\d+\b/g],
-      ['op', /[-+*\/%=!<>&|^~?]+|->|\.\.|\|>/g],
+      ['op', /->|\.\.|\|>|[-+*\/%=!<>&|^~?]+/g],
     ];
 
     const zigRules = [
@@ -317,8 +318,9 @@
       ['bi', /@\w+/g],
       ['kw', /\b(const|var|fn|pub|return|if|else|while|for|switch|try|catch|defer|unreachable|struct|enum|union|break|continue)\b/g],
       ['ty', /\b(i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|bool|void|noreturn|usize|anytype)\b/g],
+      ['fn', /\b(add|main|print)\b/g],
       ['nu', /\b\d+\b/g],
-      ['op', /[-+*\/%=!<>&|^~?{}().;,]+/g],
+      ['op', /->|[-+*\/%=!<>&|^~?{}().;,]+/g],
     ];
 
     const codeSamples = {
