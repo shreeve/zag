@@ -305,13 +305,17 @@
       const grid = toggle.querySelector('.code-panels');
       const toHeight = grid.offsetHeight;
 
-      // Step 4: Re-enable transition and animate (double-rAF ensures paint)
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          wrap.style.transition = '';
-          wrap.style.height = toHeight + 'px';
-        });
-      });
+      // Step 4: Force the browser to commit the locked height
+      void wrap.offsetHeight;
+
+      // Step 5: Re-enable transition and animate
+      wrap.style.transition = '';
+
+      // Step 6: Force another reflow so browser sees transition is back
+      void wrap.offsetHeight;
+
+      // Step 7: Set target height — this one will animate
+      wrap.style.height = toHeight + 'px';
       wrap.addEventListener('transitionend', () => { wrap.style.height = ''; }, { once: true });
     }
   </script>
