@@ -293,13 +293,25 @@ pub fn main() void {
 
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
 
-      const fromHeight = area.scrollHeight;
-      area.value = codeSamples[id][index];
+      // Lock current height, disable transition
+      const fromHeight = area.offsetHeight;
+      area.style.transition = 'none';
       area.style.height = fromHeight + 'px';
+      void area.offsetHeight;
 
-      requestAnimationFrame(() => {
-        area.style.height = area.scrollHeight + 'px';
-      });
+      // Swap content and measure target
+      area.value = codeSamples[id][index];
+      area.style.height = 'auto';
+      const toHeight = area.offsetHeight;
+
+      // Reset to locked height
+      area.style.height = fromHeight + 'px';
+      void area.offsetHeight;
+
+      // Animate
+      area.style.transition = '';
+      void area.offsetHeight;
+      area.style.height = toHeight + 'px';
     }
 
     // Initialize
