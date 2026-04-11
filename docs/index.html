@@ -123,19 +123,15 @@
     .bi { color: #67e8f9; }
 
     .code-panels {
-      display: grid;
-      grid-template: 1fr / 1fr;
-      overflow: hidden;
-      transition: height 0.3s ease;
+      position: relative;
     }
 
     .code-panel {
-      grid-area: 1 / 1;
-      visibility: hidden;
+      display: none;
     }
 
     .code-panel.active {
-      visibility: visible;
+      display: block;
     }
 
     ul {
@@ -283,28 +279,8 @@
       const toggle = document.getElementById(toggleId);
       const tabs = toggle.querySelectorAll('.code-tab');
       const panels = toggle.querySelectorAll('.code-panel');
-      const container = toggle.querySelector('.code-panels');
-
-      // Lock current height, no transition
-      container.style.transition = 'none';
-      container.style.height = container.offsetHeight + 'px';
-      container.offsetHeight;
-
-      // Swap
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       panels.forEach((p, i) => p.classList.toggle('active', i === index));
-
-      // Measure new active panel
-      const toHeight = panels[index].scrollHeight;
-
-      // Animate
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          container.style.transition = '';
-          container.style.height = toHeight + 'px';
-        });
-      });
-      container.addEventListener('transitionend', () => { container.style.height = ''; }, { once: true });
     }
   </script>
 
