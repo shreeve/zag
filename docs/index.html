@@ -123,13 +123,17 @@
     .bi { color: #67e8f9; }
 
     .code-panel {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s ease;
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease;
     }
 
     .code-panel.active {
-      max-height: 500px;
+      grid-template-rows: 1fr;
+    }
+
+    .code-panel > div {
+      overflow: hidden;
     }
 
     ul {
@@ -213,7 +217,7 @@
         <button class="code-tab" onclick="showTab('hello-toggle', 1)">Zig</button>
       </div>
       <div class="code-panels">
-        <div class="code-panel active">
+        <div class="code-panel active"><div>
 <pre><span class="kw">fun</span> <span class="fn">add</span> a: <span class="ty">i32</span>, b: <span class="ty">i32</span> <span class="op">-></span> <span class="ty">i32</span>
   a <span class="op">+</span> b
 
@@ -223,8 +227,8 @@
     <span class="fn">print</span> total
   <span class="kw">else</span>
     <span class="fn">print</span> <span class="nu">0</span></pre>
-        </div>
-        <div class="code-panel">
+        </div></div>
+        <div class="code-panel"><div>
 <pre><span class="kw">const</span> std = <span class="bi">@import</span>(<span class="st">"std"</span>);
 
 <span class="kw">fn</span> <span class="fn">add</span>(a: <span class="ty">i32</span>, b: <span class="ty">i32</span>) <span class="ty">i32</span> {
@@ -239,7 +243,7 @@
         std.debug.<span class="fn">print</span>(<span class="st">"{any}\n"</span>, .{<span class="nu">0</span>});
     }
 }</pre>
-        </div>
+        </div></div>
       </div>
     </div>
 
