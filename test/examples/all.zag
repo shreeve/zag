@@ -189,7 +189,7 @@ fun main -> !void                          # fun (main can return errors for try
   print "yes" if true                      # postif (guard)
   x = 42 if true else 0                    # ternary (value in assignment)
   print x
-  print (x if x > 0 else 99)               # ternary (value as argument)
+  print x if x > 0 else 99                 # ternary (value as argument, no parens!)
 
   # --- While ---
   #
