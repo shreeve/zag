@@ -129,19 +129,18 @@
     }
 
     .code-panel {
-      opacity: 0;
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      visibility: hidden;
-      transition: opacity 0.25s ease;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .code-panel.active {
-      opacity: 1;
       position: relative;
-      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
     }
 
     ul {
@@ -291,15 +290,15 @@
       const panels = toggle.querySelectorAll('.code-panel');
       const container = toggle.querySelector('.code-panels');
 
-      container.style.height = container.offsetHeight + 'px';
+      const fromHeight = container.offsetHeight;
+      container.style.height = fromHeight + 'px';
 
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       panels.forEach((p, i) => p.classList.toggle('active', i === index));
 
-      requestAnimationFrame(() => {
-        const active = toggle.querySelector('.code-panel.active');
-        container.style.height = active.offsetHeight + 'px';
-      });
+      const toHeight = toggle.querySelector('.code-panel.active').offsetHeight;
+      requestAnimationFrame(() => { container.style.height = toHeight + 'px'; });
+      container.addEventListener('transitionend', () => { container.style.height = ''; }, { once: true });
     }
   </script>
 
