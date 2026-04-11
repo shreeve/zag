@@ -80,10 +80,10 @@ Another key design choice is that the core language can stay small while optiona
 The bootstrap compiler works end-to-end — 56-rule grammar, ~95% of day-to-day Zig expressible:
 
 ```bash
-./bin/zag    test/examples/hello.zag          # emit Zig source (default)
-./bin/zag -t test/examples/hello.zag         # dump token stream
-./bin/zag -s test/examples/hello.zag         # print S-expressions
-./bin/zag -r test/examples/hello.zag         # compile and run
+./bin/zag    test/examples/hello.zag  # emit Zig source (default)
+./bin/zag -t test/examples/hello.zag  # dump token stream
+./bin/zag -s test/examples/hello.zag  # print S-expressions
+./bin/zag -r test/examples/hello.zag  # compile and run
 ```
 
 What works now: `fun`/`sub`, `if` (prefix + postfix), `while`, `for`/`for *item`, `match` (range/enum patterns), `enum` (plain + tagged unions), `struct`/`packed struct` (fields, defaults, methods), `error` sets, `type`, `test`, `pub`/`extern`/`export`/`packed`, `try`/`catch`/`??`, captures (`as`/`|val|`), `defer`/`errdefer`, `comptime`/`inline`, `=`/`=!`/`+=`/`-=`/`*=`, typed params, return types, `?T`/`*T`/`[]T`/`!T`, `@builtins`, array literals, pipe `|>`, range `..`, `break :label`/`continue :label`/`return`, `unreachable`/`undefined`, lambdas, struct literals, pointer deref `ptr.*`, implicit call with prefix `-`/`!`.
