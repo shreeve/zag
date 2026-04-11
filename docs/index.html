@@ -331,10 +331,7 @@
 
 sub main
   total = add 1, 2
-  if total > 0
-    print total
-  else
-    print 0`,
+  print total if total > 0 else 0`,
 `const std = @import("std");
 
 fn add(a: i32, b: i32) i32 {
@@ -343,11 +340,7 @@ fn add(a: i32, b: i32) i32 {
 
 pub fn main() void {
     const total = add(1, 2);
-    if (total > 0) {
-        std.debug.print("{any}\\n", .{total});
-    } else {
-        std.debug.print("{any}\\n", .{0});
-    }
+    std.debug.print("{any}\\n", .{if (total > 0) total else 0});
 }`
         ],
         rules: [zagRules, zigRules]
