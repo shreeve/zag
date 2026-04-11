@@ -290,21 +290,25 @@
       const panels = toggle.querySelectorAll('.code-panel');
       const container = toggle.querySelector('.code-panels');
 
-      // Measure the target panel height before swapping
-      const fromHeight = container.offsetHeight;
-      panels[index].style.position = 'relative';
-      panels[index].style.opacity = '1';
+      // Measure target height before swapping
+      panels[index].style.cssText = 'position:relative;opacity:1';
       const toHeight = panels[index].offsetHeight;
-      panels[index].style.position = '';
-      panels[index].style.opacity = '';
+      panels[index].style.cssText = '';
 
-      // Lock current height, then swap
-      container.style.height = fromHeight + 'px';
+      // Lock at current height and force layout
+      container.style.transition = 'none';
+      container.style.height = container.offsetHeight + 'px';
+      container.offsetHeight; // force reflow
+
+      // Swap panels
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
       panels.forEach((p, i) => p.classList.toggle('active', i === index));
 
       // Animate to new height
-      requestAnimationFrame(() => { container.style.height = toHeight + 'px'; });
+      requestAnimationFrame(() => {
+        container.style.transition = '';
+        container.style.height = toHeight + 'px';
+      });
       container.addEventListener('transitionend', () => { container.style.height = ''; }, { once: true });
     }
   </script>
