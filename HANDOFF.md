@@ -28,7 +28,7 @@ Zag source → Rewriter (indent/outdent, minus classification)
 | File | Role |
 |------|------|
 | `zag.grammar` | Lexer + parser definition (56 rules) |
-| `src/grammar.zig` | Language-agnostic grammar engine (reads .grammar, generates parser) |
+| [`nexus`](https://github.com/shreeve/nexus) | Language-agnostic grammar engine (reads .grammar, generates parser) |
 | `src/parser.zig` | Auto-generated lexer + SLR(1) parser (never hand-edit) |
 | `src/zag.zig` | Language module: Tag enum, keywords, rewriter (indent, minus classify) |
 | `src/compiler.zig` | S-expression → Zig emitter + type resolution pre-pass |
@@ -40,7 +40,7 @@ Zag source → Rewriter (indent/outdent, minus classification)
 
 ```bash
 zig build grammar                            # build the grammar tool
-./bin/grammar zag.grammar src/parser.zig     # generate parser from grammar
+zig build parser                             # generate parser from grammar (uses nexus)
 zig build                                    # build the zag compiler
 ./bin/zag test/examples/hello.zag            # parse → print S-expressions
 ./bin/zag --compile test/examples/all.zag    # emit Zig source

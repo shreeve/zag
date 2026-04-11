@@ -114,7 +114,7 @@ Type resolution: symbol table from fun/sub declarations, void-call detection (cl
 - `docs/architecture.md` — pipeline, grammar engine, file roles, build commands
 - `docs/roadmap.md` — project status, what's done, bucket list
 - `docs/stages.md` — stage ownership: what the rewriter, grammar, and compiler each own
-- `docs/dsl.md` — grammar DSL reference (how to read/write .grammar files)
+- [`nexus`](https://github.com/shreeve/nexus) — grammar DSL reference and parser generator
 - `docs/types.md` — type system direction
 - `docs/target.md` — Zig construct catalog from real-world embedded codebase
 - `docs/lessons.md` — design lessons from rip-lang, slash, mumps (historical reference)

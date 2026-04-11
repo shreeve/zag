@@ -9,49 +9,21 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     // =========================================================================
-    // Grammar — Parser Generator Tool
-    // =========================================================================
-    //
-    // Builds the grammar tool that reads zag.grammar and generates
-    // src/parser.zig (lexer + SLR(1) parser producing S-expressions).
-    //
-    // Usage:
-    //   zig build grammar          — build the grammar tool
-    //   ./bin/grammar zag.grammar src/parser.zig  — generate parser
-
-    const grammar_mod = b.createModule(.{
-        .root_source_file = b.path("src/grammar.zig"),
-        .target = target,
-        .optimize = optimize,
-    });
-
-    const grammar_exe = b.addExecutable(.{
-        .name = "grammar",
-        .root_module = grammar_mod,
-    });
-
-    const install_grammar = b.addInstallArtifact(grammar_exe, .{
-        .dest_dir = .{ .override = .{ .custom = ".." } },
-        .dest_sub_path = "bin/grammar",
-    });
-
-    const grammar_step = b.step("grammar", "Build grammar tool");
-    grammar_step.dependOn(&install_grammar.step);
-
-    // =========================================================================
     // Parser generation step
     // =========================================================================
     //
-    // Runs the grammar tool to generate src/parser.zig from zag.grammar.
+    // Runs nexus to generate src/parser.zig from zag.grammar.
+    // Requires nexus to be built: (cd ../nexus && zig build)
     //
     // Usage:
     //   zig build parser           — generate parser from grammar
 
-    const gen_cmd = b.addRunArtifact(grammar_exe);
-    gen_cmd.addArg("zag.grammar");
-    gen_cmd.addArg("src/parser.zig");
-
     const parser_step = b.step("parser", "Generate parser from zag.grammar");
+    const gen_cmd = b.addSystemCommand(&.{
+        "../nexus/bin/nexus",
+        "zag.grammar",
+        "src/parser.zig",
+    });
     parser_step.dependOn(&gen_cmd.step);
 
     // =========================================================================

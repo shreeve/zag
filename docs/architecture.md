@@ -32,7 +32,7 @@ The first two stages of the pipeline (Zag source to S-expressions) are driven by
 | File | Role |
 |------|------|
 | `zag.grammar` | Single source of truth: lexer tokens, parser rules, directives |
-| `src/grammar.zig` | Language-agnostic engine: reads `.grammar`, generates `parser.zig` |
+| [`nexus`](https://github.com/shreeve/nexus) | Language-agnostic engine: reads `.grammar`, generates `parser.zig` |
 | `src/zag.zig` | Language module: `Tag` enum, keyword lookup, rewriter |
 | `src/parser.zig` | Auto-generated lexer + SLR(1) parser (never hand-edit) |
 | `src/compiler.zig` | S-expression to Zig source emitter (Tag-based dispatch) |
@@ -42,14 +42,14 @@ The first two stages of the pipeline (Zag source to S-expressions) are driven by
 
 ```mermaid
 flowchart LR
-  grammar["zag.grammar"] --> engine["grammar.zig"]
+  grammar["zag.grammar"] --> engine["nexus"]
   engine --> parser["src/parser.zig"]
   lang["src/zag.zig"] -.->|"imported via @lang"| parser
 ```
 
 The grammar file sits at the repo root as `zag.grammar`. Running the grammar tool reads it and writes `src/parser.zig`. The generated parser imports `src/zag.zig` via the `@lang = "zag"` directive, which wires in language-specific helpers without putting any Zag knowledge into the engine itself.
 
-The same `grammar.zig` engine is used across projects. Only the grammar file and language module change between languages.
+The [Nexus](https://github.com/shreeve/nexus) engine is shared across projects. Only the grammar file and language module change between languages.
 
 ### Grammar Directives
 
@@ -94,7 +94,7 @@ Key grammar features: `body` uses NEWLINE as separator (not terminator); `block`
 
 ```bash
 zig build grammar                            # build the grammar tool
-./bin/grammar zag.grammar src/parser.zig     # generate parser from grammar
+zig build parser                              # generate parser from grammar (uses nexus)
 zig build                                    # build the zag compiler
 ./bin/zag test/examples/hello.zag             # parse and print S-expressions
 ./bin/zag --compile test/examples/hello.zag   # emit Zig source
