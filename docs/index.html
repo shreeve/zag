@@ -122,10 +122,18 @@
     .op { color: #f87171; }
     .bi { color: #67e8f9; }
 
+    .code-box {
+      position: relative;
+      border-radius: 0 8px 8px 8px;
+      overflow: hidden;
+    }
+
     .code-area {
+      display: block;
       width: 100%;
       background: #1a1a2e;
-      color: #e0e0e0;
+      color: transparent;
+      caret-color: transparent;
       border: none;
       border-radius: 0 8px 8px 8px;
       padding: 1.25rem 1.5rem;
@@ -138,6 +146,20 @@
     }
 
     .code-area:focus { outline: none; }
+
+    .code-highlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1.25rem 1.5rem;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: #e0e0e0;
+      pointer-events: none;
+      white-space: pre;
+    }
 
     ul {
       margin: 0.5rem 0 1.5rem 1.5rem;
@@ -219,7 +241,10 @@
         <button class="code-tab active" onclick="showTab('hello-toggle', 0)">Zag</button>
         <button class="code-tab" onclick="showTab('hello-toggle', 1)">Zig</button>
       </div>
-      <textarea class="code-area" id="hello-code" readonly></textarea>
+      <div class="code-box">
+        <textarea class="code-area" id="hello-code" readonly></textarea>
+        <div class="code-highlight" id="hello-highlight"></div>
+      </div>
     </div>
 
     <h2>Features</h2>
@@ -252,8 +277,35 @@
   <footer>Zag &mdash; blazing fast. super clean.</footer>
 
   <script>
+    function hi(s, rules) {
+      let h = s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      for (const [cls, re] of rules)
+        h = h.replace(re, m => `<span class="${cls}">${m}</span>`);
+      return h;
+    }
+
+    const zagRules = [
+      ['cm', /#.*/g],
+      ['st', /"[^"]*"|'[^']*'/g],
+      ['kw', /\b(fun|sub|if|else|while|for|match|return|break|continue|defer|errdefer|try|catch|comptime|inline|pub|extern|export|use|test|enum|struct|error|type)\b/g],
+      ['ty', /\b(i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|bool|void|noreturn|usize)\b/g],
+      ['nu', /\b\d+\b/g],
+      ['op', /[-+*\/%=!<>&|^~?]+|->|\.\.|\|>/g],
+    ];
+
+    const zigRules = [
+      ['cm', /\/\/.*/g],
+      ['st', /"[^"]*"/g],
+      ['bi', /@\w+/g],
+      ['kw', /\b(const|var|fn|pub|return|if|else|while|for|switch|try|catch|defer|unreachable|struct|enum|union|break|continue)\b/g],
+      ['ty', /\b(i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|bool|void|noreturn|usize|anytype)\b/g],
+      ['nu', /\b\d+\b/g],
+      ['op', /[-+*\/%=!<>&|^~?{}().;,]+/g],
+    ];
+
     const codeSamples = {
-      'hello-code': [
+      'hello': {
+        text: [
 `fun add a: i32, b: i32 -> i32
   a + b
 
@@ -277,49 +329,47 @@ pub fn main() void {
         std.debug.print("{any}\\n", .{0});
     }
 }`
-      ]
+        ],
+        rules: [zagRules, zigRules]
+      }
     };
-
-    function fitHeight(el) {
-      el.style.height = 'auto';
-      el.style.height = el.scrollHeight + 'px';
-    }
 
     function showTab(toggleId, index) {
       const toggle = document.getElementById(toggleId);
       const tabs = toggle.querySelectorAll('.code-tab');
       const area = toggle.querySelector('.code-area');
-      const id = area.id;
+      const overlay = toggle.querySelector('.code-highlight');
+      const key = area.id.replace('-code', '');
+      const sample = codeSamples[key];
 
       tabs.forEach((t, i) => t.classList.toggle('active', i === index));
 
-      // Lock current height, disable transition
       const fromHeight = area.offsetHeight;
       area.style.transition = 'none';
       area.style.height = fromHeight + 'px';
       void area.offsetHeight;
 
-      // Swap content and measure target
-      area.value = codeSamples[id][index];
+      area.value = sample.text[index];
+      overlay.innerHTML = hi(sample.text[index], sample.rules[index]);
       area.style.height = '0';
       const toHeight = area.scrollHeight;
 
-      // Reset to locked height
       area.style.height = fromHeight + 'px';
       void area.offsetHeight;
 
-      // Animate
       area.style.transition = '';
       void area.offsetHeight;
       area.style.height = toHeight + 'px';
     }
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      for (const [id, samples] of Object.entries(codeSamples)) {
-        const area = document.getElementById(id);
-        area.value = samples[0];
-        fitHeight(area);
+      for (const [key, sample] of Object.entries(codeSamples)) {
+        const area = document.getElementById(key + '-code');
+        const overlay = document.getElementById(key + '-highlight');
+        area.value = sample.text[0];
+        overlay.innerHTML = hi(sample.text[0], sample.rules[0]);
+        area.style.height = 'auto';
+        area.style.height = area.scrollHeight + 'px';
       }
     });
   </script>
