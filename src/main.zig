@@ -15,11 +15,13 @@ const Compiler = @import("compiler.zig").Compiler;
 
 const Mode = enum { compile, run, sexps, tokens };
 
-pub fn main() !void {
-    const allocator = std.heap.page_allocator;
+pub fn main(init: std.process.Init) !void {
+    // Short-lived CLI: arena is ~100x+ faster than DebugAllocator in Debug
+    // and makes per-allocation free() a no-op. Everything is released on exit.
+    const allocator = init.arena.allocator();
+    const io = init.io;
 
-    const args = try std.process.argsAlloc(allocator);
-    defer std.process.argsFree(allocator, args);
+    const args = try init.minimal.args.toSlice(allocator);
 
     var mode: Mode = .compile;
     var file_path: ?[]const u8 = null;
@@ -54,16 +56,15 @@ pub fn main() !void {
         std.process.exit(1);
     }
 
-    const source = std.fs.cwd().readFileAlloc(allocator, file_path.?, 1024 * 1024) catch |err| {
+    const source = std.Io.Dir.cwd().readFileAlloc(io, file_path.?, allocator, .limited(1024 * 1024)) catch |err| {
         std.debug.print("Error reading {s}: {}\n", .{ file_path.?, err });
         std.process.exit(1);
     };
-    defer allocator.free(source);
 
     switch (mode) {
-        .compile => try compileToStdout(allocator, source),
-        .run => try compileAndRun(allocator, source, file_path.?),
-        .sexps => try parseAndPrint(allocator, source),
+        .compile => try compileToStdout(allocator, io, source),
+        .run => try compileAndRun(allocator, io, source, file_path.?),
+        .sexps => try parseAndPrint(allocator, io, source),
         .tokens => dumpTokens(source),
     }
 }
@@ -82,7 +83,7 @@ fn dumpTokens(source: []const u8) void {
     }
 }
 
-fn parseAndPrint(allocator: std.mem.Allocator, source: []const u8) !void {
+fn parseAndPrint(allocator: std.mem.Allocator, io: std.Io, source: []const u8) !void {
     var p = parser.Parser.init(allocator, source);
     defer p.deinit();
 
@@ -92,14 +93,14 @@ fn parseAndPrint(allocator: std.mem.Allocator, source: []const u8) !void {
     };
 
     var stdout_buffer: [4096]u8 = undefined;
-    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    var stdout_writer = std.Io.File.stdout().writer(io, &stdout_buffer);
     const w: *std.Io.Writer = &stdout_writer.interface;
     try result.write(source, w);
     try w.writeAll("\n");
     try w.flush();
 }
 
-fn compileToStdout(allocator: std.mem.Allocator, source: []const u8) !void {
+fn compileToStdout(allocator: std.mem.Allocator, io: std.Io, source: []const u8) !void {
     var p = parser.Parser.init(allocator, source);
     defer p.deinit();
 
@@ -111,13 +112,13 @@ fn compileToStdout(allocator: std.mem.Allocator, source: []const u8) !void {
     var c = Compiler.init(source);
 
     var stdout_buffer: [4096]u8 = undefined;
-    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    var stdout_writer = std.Io.File.stdout().writer(io, &stdout_buffer);
     const w: *std.Io.Writer = &stdout_writer.interface;
     try c.compile(result, w);
     try w.flush();
 }
 
-fn compileAndRun(allocator: std.mem.Allocator, source: []const u8, zag_path: []const u8) !void {
+fn compileAndRun(allocator: std.mem.Allocator, io: std.Io, source: []const u8, zag_path: []const u8) !void {
     var p = parser.Parser.init(allocator, source);
     defer p.deinit();
 
@@ -130,25 +131,32 @@ fn compileAndRun(allocator: std.mem.Allocator, source: []const u8, zag_path: []c
     const tmp_path = makeTmpPath(&tmp_buf, zag_path);
 
     {
-        const f = std.fs.cwd().createFile(tmp_path, .{}) catch |err| {
+        const f = std.Io.Dir.cwd().createFile(io, tmp_path, .{}) catch |err| {
             std.debug.print("Error creating {s}: {}\n", .{ tmp_path, err });
             std.process.exit(1);
         };
-        defer f.close();
+        defer f.close(io);
 
         var c = Compiler.init(source);
         var file_buffer: [4096]u8 = undefined;
-        var file_writer = f.writer(&file_buffer);
+        var file_writer = f.writer(io, &file_buffer);
         const w: *std.Io.Writer = &file_writer.interface;
         try c.compile(result, w);
         try w.flush();
     }
 
     const argv = [_][]const u8{ "zig", "run", tmp_path };
-    var child = std.process.Child.init(&argv, allocator);
-    const term = try child.spawnAndWait();
+    // Explicit inherit for stdio: the child's output streams straight to the
+    // user's terminal (same behavior as the pre-0.16 spawn + wait default).
+    var child = try std.process.spawn(io, .{
+        .argv = &argv,
+        .stdin = .inherit,
+        .stdout = .inherit,
+        .stderr = .inherit,
+    });
+    const term = try child.wait(io);
     switch (term) {
-        .Exited => |code| if (code != 0) {
+        .exited => |code| if (code != 0) {
             std.debug.print("note: generated Zig at {s}\n", .{tmp_path});
             std.process.exit(code);
         },
